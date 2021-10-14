@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import numpy as np
 from helpers2 import *
 
 
-def least squares GD(y, tx, initial_w, max_iters, gamma):
+def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     """Linear regression using gradient descent"""
     # GD donne loss et w 
     w = initial_w
@@ -19,7 +20,7 @@ def least squares GD(y, tx, initial_w, max_iters, gamma):
     return w, loss
 
 
-def least squares SGD(y, tx, initial_w, max_iters, gamma):
+def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     """Linear regression using stochastic gradient descent"""
     w = initial_w
     for n_iter in range(max_iters):
@@ -33,14 +34,14 @@ def least squares SGD(y, tx, initial_w, max_iters, gamma):
     return w, loss
 
 
-def least squares(y, tx):
+def least_squares(y, tx):
     """Least squares regression using normal equations"""
     w_star = np.linalg.solve(tx.T.dot(tx), tx.T.dot(y))
     loss = compute_mse(y, tx, w_star)
     return w, loss
 
 
-def ridge regression(y, tx, lambda_):
+def ridge_regression(y, tx, lambda_):
     """Ridge regression using normal equations"""
     N = tx.shape[1]
     lamb = 2*N*lambda_*np.identity(N)
@@ -53,12 +54,12 @@ def ridge regression(y, tx, lambda_):
     return w, loss
 
 
-def logistic regression(y, tx, initial_w, max iters, gamma):
+def logistic_regression(y, tx, initial_w, max iters, gamma):
     """Logistic regression using gradient descent or SGD"""
     return w, loss
 
 
-def reg logistic regression(y, tx, lambda_, initial_w, max_iters, gamma):
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     """Logistic regression using gradient descent or SGD"""
     return w, loss
 

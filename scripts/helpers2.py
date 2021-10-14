@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import numpy as np
+
 def compute_mse_loss(y, tx, w):
     """Calculate the mse for error vector e."""
     e = y - tx.dot(w)
