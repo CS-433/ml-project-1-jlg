@@ -2,7 +2,8 @@ from implementations import *
 import numpy as np
 from helpers2 import *
 
-def build_k_indices(y, k_fold, seed):
+
+def build_k_indices(y, k_fold, seed=1):
     """build k indices for k-fold."""
     num_row = y.shape[0]
     interval = int(num_row / k_fold)
@@ -12,13 +13,14 @@ def build_k_indices(y, k_fold, seed):
                  for k in range(k_fold)]
     return np.array(k_indices)
 
+
 def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
     """return the loss for k_fold cross validation.
     default regression is ridge 
     set fonction=0 for least squares with normal equations
         fonction=1 for ridge regression
-        fonction=2 for gd
-        fonction=3 for sgd"""
+        fonction=2 for gradient descent
+        fonction=3 for stochastic gradient decsent"""
     
     # get k'th subgroup in test, others in train: 
     te_indice = k_indices[k]
@@ -32,7 +34,7 @@ def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
     # form data with polynomial degree
     tx_tr = build_poly(x_tr, degree)
     tx_te = build_poly(x_te, degree)
-
+    
     # Regression
     if fonction == 0:
         w, loss_tr = least_squares(y_tr, tx_tr)
@@ -46,7 +48,9 @@ def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
     # calculate the loss for train and test data: 
     loss_tr = np.sqrt(2*loss_tr)
     loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
+    
     return loss_tr, loss_te
+
 
 def cross_validation(y, x, k_fold, parameters, degree=0, fonction=1, seed=1):
     """returns the result of a k_fold cross_validation 
@@ -70,7 +74,8 @@ def cross_validation(y, x, k_fold, parameters, degree=0, fonction=1, seed=1):
     best_par = parameters[np.argmin(rmse_te)]
     return best_par
 
-def best_degree_selection(x, y, degrees, k_fold, lambdas, fonction=1, seed=1):
+
+def best_degree_selection(y, x, degrees, k_fold, lambdas, fonction=1, seed=1):
     """return the best degree and lambda association."""
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
@@ -78,15 +83,18 @@ def best_degree_selection(x, y, degrees, k_fold, lambdas, fonction=1, seed=1):
     #for each degree, we compute the best lambdas and the associated rmse
     best_lambdas = []
     best_rmses = []
+    
     #vary degree
     for degree in degrees:
         rmse_te = []
+        
         if np.all(lambdas == 0): #we do not have to find the best lambda
             rmse_te_tmp = []
             for k in range(k_fold):
                 _, loss_te = k_fold_regression(y, x, k_indices, k, lambdas, degree, fonction)
                 rmse_te_tmp.append(loss_te)
             best_rmses.append(np.mean(rmse_te_tmp))
+        
         else: # vary lambda
             for lambda_ in lambdas:
                 rmse_te_tmp = []
@@ -98,8 +106,11 @@ def best_degree_selection(x, y, degrees, k_fold, lambdas, fonction=1, seed=1):
             ind_lambda_opt = np.argmin(rmse_te)
             best_lambdas.append(lambdas[ind_lambda_opt])
             best_rmses.append(rmse_te[ind_lambda_opt])
+    
+    print("best rmses", best_rmses)
     best_degree =  degrees[np.argmin(best_rmses)]  
-    if np.any(lambdas != 0):
-        best_lambda =  lambdas[np.argmin(best_rmses)]
+    if np.all(lambdas == 0):
+        best_lambda = 0
+    else: best_lambda =  lambdas[np.argmin(best_rmses)]
     
     return  best_degree, best_lambda
