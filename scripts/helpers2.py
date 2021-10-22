@@ -73,3 +73,53 @@ def build_poly(tx, degree):
     for deg in range(1, degree+1):
         poly = np.c_[poly, np.power(tx, deg)]
     return poly
+
+def sigmoid(t):
+    """apply the sigmoid function on t."""
+    sig = (1 + np.exp(-t))**(-1)
+    return sig
+
+def calculate_loss(y, tx, w):
+    """compute the loss: negative log likelihood."""
+    pred = sigmoid(tx.dot(w))
+    loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
+    return np.squeeze(- loss)
+
+def calculate_gradient(y, tx, w):
+    """compute the gradient of loss."""
+    grad = tx.T.dot(sigmoid(tx.dot(w))-y)
+    return grad
+
+def calculate_hessian(y, tx, w):
+    """return the Hessian of the loss function."""
+    pred = sigmoid(tx.dot(w))
+    pred = np.diag(pred.T[0])
+    r = np.multiply(pred, (1-pred))
+    return tx.T.dot(r).dot(tx)
+
+def learning_by_gradient_descent(y, tx, w, gamma):
+    """
+    Do one step of gradient descent using logistic regression.
+    Return the loss and the updated w.
+    """
+    loss = calculate_loss(y, tx, w)
+    grad = calculate_gradient(y, tx, w)
+    w = w - gamma*grad
+    return loss, w
+
+def penalized_logistic_regression(y, tx, w, lambda_):
+    """return the loss, gradient"""
+    num_samples = y.shape[0]
+    loss = calculate_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
+    grad = calculate_gradient(y, tx, w) + 2 * lambda_ * w
+    hess = calculate_hessian(y, tx, w) + 2 * lambda_
+    return loss, grad, hess
+
+def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
+    """
+    Do one step of gradient descent, using the penalized logistic regression.
+    Return the loss and updated w.
+    """
+    loss, grad, hess = penalized_logistic_regression(y, tx, w, lambda_)
+    w = w - gamma * grad
+    return loss, w
