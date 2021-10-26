@@ -1,8 +1,8 @@
 import numpy as np
 
 def filtering_with_mean(tX):
-    """ """
-    index = [0,4,5,6,12,23,24,25,26,27,28]
+    """Replace the -999 of each column of the matrix tX by the mean of the column without the -999"""
+    index = np.arange(tX.shape[1])
     tX_filtered = np.copy(tX)
     arr = []
     for ind in index :
@@ -12,9 +12,11 @@ def filtering_with_mean(tX):
     return tX_filtered
 
 
-def filtering_with_mean_bis(tX) :
-    """ """
-    index = [0,4,5,6,12,23,24,25,26,27,28]
+def filtering_with_mean_bis(tX, y):
+    """Compute a mean of each column of the matrix tX according to ids which correpond to y=1 and another 
+    mean of each column according to ids which correpond to y=-1 without taking the -999. Then, these means 
+    replace the -999 according to the y of the row where the -999 is. It returns the filtered matrix"""
+    index = np.arange(tX.shape[1])
     tX_filtered = np.copy(tX)
     
     ind_1 = np.where(y == 1)[0]
@@ -37,14 +39,16 @@ def filtering_with_mean_bis(tX) :
         tX_filtered[new_ind_2, ind] = mean_2
     return tX_filtered
 
-def std(tX) :
-    """ """
-    for i in range(tX.shape[1]) :
-        tX[:,i] = (tX[:,i] - np.mean(tX[:,i])) / np.std(tX[:,i])
+
+def std(tX):
+    """Standardize each column of the matrix tX if the standard deviation is bigger than 0"""
+    mean = np.mean(tX, axis = 0)
+    std = np.std(tX, axis = 0)
+    tX[:, std>0] = (tX[:, std>0] - mean[std>0])/std[std>0]
     return tX
 
 def cut(tX, to_cut):
-    """ """
+    """Remove columns of the matrix tX whose index are given in the array to_cut as parameters"""
     cut_index = 100*np.ones(tX.shape[1])
     index_full = np.arange(tX.shape[1])
     for i in range(tX.shape[1]):
@@ -57,7 +61,7 @@ def cut(tX, to_cut):
     return tX_cut
 
 def keep(tX, to_keep):
-    """ """
+    """Keep only the columns of the matrix tX whose index are given in the array to_keep as parameters"""
     keep_index = 100*np.ones(tX.shape[1])
     index_full = np.arange(tX.shape[1])
     for i in range(tX.shape[1]):
