@@ -32,8 +32,12 @@ def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
     x_tr = x[tr_indice]
 
     # form data with polynomial degree
-    tx_tr = build_poly(x_tr, degree)
-    tx_te = build_poly(x_te, degree)
+    if degree==0:
+        tx_tr = x_tr
+        tx_te = x_te
+    else: 
+        tx_tr = build_poly(x_tr, degree)
+        tx_te = build_poly(x_te, degree)
     
     # Regression
     if fonction == 0:
@@ -55,7 +59,6 @@ def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
 def cross_validation(y, x, k_fold, parameters, degree=0, fonction=1, seed=1):
     """returns the result of a k_fold cross_validation 
     on a certain parameter. """
-    k_fold = 4
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
     # define lists to store the loss of training data and test data
