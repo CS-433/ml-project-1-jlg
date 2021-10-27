@@ -48,19 +48,28 @@ def least_squares_SGD(y, tx,  gamma, max_iters=50):
     return w, loss
 
 
-def logistic_regression(y, tx, initial_w, max_iters, gamma):
+#def logistic_regression(y, tx, initial_w=0, max_iters=500, gamma=0.01):
+def logistic_regression(y, tx, initial_w=0, max_iters=10, gamma=0.01):
     """Logistic regression using gradient descent or SGD"""
     #threshold = 1e-8
     losses = []
     tx = np.c_[np.ones((y.shape[0], 1)), tx]
-    w = initial_w
+    
+    print('test1')
+    print(np.shape(tx))
+    #w = initial_w
+    
+    w = np.zeros((tx.shape[1], 1))
+    #print('test2')
+    #print(np.shape(w))
 
     # start the logistic regression
-    for iter in range(max_iter):
+    for iter in range(max_iters):
         # get loss and update w.
         loss, w = learning_by_gradient_descent(y, tx, w, gamma)
         # log info
-        if iter % 100 == 0:
+        #if iter % 100 == 0:
+        if iter % 2 == 0:
             print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
         # converge criterion
         losses.append(loss)
