@@ -1,8 +1,8 @@
 import numpy as np
 
 def filtering_with_mean(tX):
-    """Replace the -999 of each column of the matrix tX by the mean of the column without the -999"""
-    index = np.arange(tX.shape[1])
+    """ """
+    index = [0,4,5,6,12,23,24,25,26,27,28]
     tX_filtered = np.copy(tX)
     arr = []
     for ind in index :
@@ -12,11 +12,9 @@ def filtering_with_mean(tX):
     return tX_filtered
 
 
-def filtering_with_mean_bis(tX, y):
-    """Compute a mean of each column of the matrix tX according to ids which correpond to y=1 and another 
-    mean of each column according to ids which correpond to y=-1 without taking the -999. Then, these means 
-    replace the -999 according to the y of the row where the -999 is. It returns the filtered matrix"""
-    index = np.arange(tX.shape[1])
+def filtering_with_mean_bis(tX) :
+    """ """
+    index = [0,4,5,6,12,23,24,25,26,27,28]
     tX_filtered = np.copy(tX)
     
     ind_1 = np.where(y == 1)[0]
@@ -39,16 +37,14 @@ def filtering_with_mean_bis(tX, y):
         tX_filtered[new_ind_2, ind] = mean_2
     return tX_filtered
 
-
-def std(tX):
-    """Standardize each column of the matrix tX if the standard deviation is bigger than 0"""
-    mean = np.mean(tX, axis = 0)
-    std = np.std(tX, axis = 0)
-    tX[:, std>0] = (tX[:, std>0] - mean[std>0])/std[std>0]
+def std(tX) :
+    """ """
+    for i in range(tX.shape[1]) :
+        tX[:,i] = (tX[:,i] - np.mean(tX[:,i])) / np.std(tX[:,i])
     return tX
 
 def cut(tX, to_cut):
-    """Remove columns of the matrix tX whose index are given in the array to_cut as parameters"""
+    """ """
     cut_index = 100*np.ones(tX.shape[1])
     index_full = np.arange(tX.shape[1])
     for i in range(tX.shape[1]):
@@ -61,7 +57,7 @@ def cut(tX, to_cut):
     return tX_cut
 
 def keep(tX, to_keep):
-    """Keep only the columns of the matrix tX whose index are given in the array to_keep as parameters"""
+    """ """
     keep_index = 100*np.ones(tX.shape[1])
     index_full = np.arange(tX.shape[1])
     for i in range(tX.shape[1]):
@@ -72,3 +68,51 @@ def keep(tX, to_keep):
     index = index.reshape(-1)
     tX_kept = tX[:, index]
     return tX_kept
+
+def log_distribution(tX, to_log):
+    tX_log = np.copy(tX)
+    index = np.arange(tX.shape[1])
+    for i in range(tX.shape[1]):
+        for j in range(len(to_log)):
+            if index[i] == to_log[j]:
+                tX_log[:, i] = np.log(1+tX[:, to_log[j]], where=np.all(tX[:, i]>0))  
+    return tX_log
+
+def separate_sets(tX, y, ids):
+    index1 = np.where(tX[:, 22]==0)
+    index2 = np.where(tX[:, 22]==1)
+    index3 = np.where(tX[:, 22]>1)
+    
+    set1_x = tX[index1]
+    set1_y = y[index1]
+    set1_ids = ids[index1]
+    
+    set2_x = tX[index2]
+    set2_y = y[index2]
+    set2_ids = ids[index2]
+    
+    set3_x = tX[index3]
+    set3_y = y[index3]
+    set3_ids = ids[index3]
+    
+    return set1_x, set1_y, set1_ids, set2_x, set2_y, set2_ids, set3_x, set3_y, set3_ids
+
+def concatenate_sets(set1_y, set1_ids, set2_y, set2_ids, set3_y, set3_ids):
+    y = np.concatenate((set1_y, set2_y, set3_y), axis = 0)
+    ids = np.concatenate((set1_ids, set2_ids, set3_ids), axis = 0)
+    return y, ids
+
+def outliers(tX, outlier):
+    outliers = []
+    M = np.squeeze(tX.shape[0])
+    for col in range(tX.shape[1]) :
+        out_col = np.nonzero(tX[:,col] == outlier)[0].shape
+        out_col = np.squeeze(out_col)
+        outliers.append(out_col/M)
+    print('outliers ratio for each feature', outliers)
+    
+    index_full = np.arange(tX.shape[1])
+    index = index_full[~(outliers==np.ones(len(outliers)))]
+    index = index.reshape(-1)
+    X_without_outliers = tX[:, index]
+    return X_without_outliers 
