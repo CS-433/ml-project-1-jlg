@@ -50,6 +50,7 @@ def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
         w, loss_tr = least_squares_SGD(y_tr, tx_tr, par)
     elif fonction == 4:
         w, loss_tr = logistic_regression(y=y_tr, tx=tx_tr, gamma=par)
+        tx_te = np.c_[np.ones((y_te.shape[0], 1)), tx_te]
     
     # calculate the loss for train and test data: 
     loss_tr = np.sqrt(2*loss_tr)

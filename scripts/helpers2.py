@@ -81,7 +81,7 @@ def sigmoid(t):
 
 def calculate_loss(y, tx, w):
     """compute the loss: negative log likelihood."""
-    #pred = sigmoid(tx.dot(w))
+    
     """print('TEST1')
     print(np.shape(y))
     print(np.shape(y.T))
@@ -93,16 +93,21 @@ def calculate_loss(y, tx, w):
     print(np.shape(y.T))"""
     
     #y = np.reshape(y, (-1,1))
-    pred = sigmoid(y.T.dot(tx).dot(w))
-    loss = np.log(pred)
+    pred = sigmoid(tx.dot(w))
+    #pred = sigmoid(y.T.dot(tx).dot(w))
+    #loss = np.log(pred)
     #loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
-    return np.squeeze(- loss)
+    loss = np.sum(np.log(1 + np.exp(tx.dot(w))) - y.dot(tx.dot(w)))
+    #return np.squeeze(- loss)
+    return loss
 
+    
 def calculate_gradient(y, tx, w):
     """compute the gradient of loss."""
-    #y = np.reshape(y, (-1, 1))
+    y = np.reshape(y, (-1, 1))
+    grad = tx.T.dot(1/(1 + np.exp(-tx.dot(w))) - y)
     #grad = tx.T.dot(sigmoid(tx.dot(w))-y)
-    grad = -1*np.shape(y) + sigmoid(y.T.dot(tx).dot(w))
+    #grad = -1*np.shape(y) + sigmoid(y.T.dot(tx).dot(w))
     return grad
 
 def calculate_hessian(y, tx, w):
