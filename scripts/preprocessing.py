@@ -1,8 +1,7 @@
 import numpy as np
 
 def filtering_with_mean(tX):
-    """ """
-    index = [0,4,5,6,12,23,24,25,26,27,28]
+    index = np.arange(tX.shape[1])
     tX_filtered = np.copy(tX)
     arr = []
     for ind in index :
@@ -12,9 +11,8 @@ def filtering_with_mean(tX):
     return tX_filtered
 
 
-def filtering_with_mean_bis(tX) :
-    """ """
-    index = [0,4,5,6,12,23,24,25,26,27,28]
+def filtering_with_mean_bis(tX, y):
+    index = np.arange(tX.shape[1])
     tX_filtered = np.copy(tX)
     
     ind_1 = np.where(y == 1)[0]
@@ -37,11 +35,15 @@ def filtering_with_mean_bis(tX) :
         tX_filtered[new_ind_2, ind] = mean_2
     return tX_filtered
 
-def std(tX) :
-    """ """
-    for i in range(tX.shape[1]) :
-        tX[:,i] = (tX[:,i] - np.mean(tX[:,i])) / np.std(tX[:,i])
+def std(tX):
+    mean = np.mean(tX, axis = 0)
+    std = np.std(tX, axis = 0)
+    tX[:, std>0] = (tX[:, std>0] - mean[std>0])/std[std>0]
     return tX
+
+def normalize(tX):
+    tX_norm = (tX - np.min(tX, axis=0))/np.max(tX, axis=0)
+    return tX_norm
 
 def cut(tX, to_cut):
     """ """
