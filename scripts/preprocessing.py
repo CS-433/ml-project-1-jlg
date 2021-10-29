@@ -73,10 +73,6 @@ def std(tX):
     tX[:, std>0] = (tX[:, std>0] - mean[std>0])/std[std>0]
     return tX
 
-def normalize(tX):
-    tX_norm = (tX - np.min(tX, axis=0))/np.max(tX, axis=0)
-    return tX_norm
-
 def cut(tX, to_cut):
     """Remove columns of the matrix tX whose index are given in the array to_cut as parameters"""
     cut_index = 100*np.ones(tX.shape[1])

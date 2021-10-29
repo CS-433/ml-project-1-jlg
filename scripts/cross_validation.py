@@ -55,7 +55,10 @@ def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
     
     # calculate the loss for train and test data: 
     loss_tr = np.sqrt(2*loss_tr)
-    loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
+    if fonction == 4:
+        loss_te = np.sqrt(2*compute_mse_lr(y_te, tx_te, w))
+    else: 
+        loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
     
     return loss_tr, loss_te
 

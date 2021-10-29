@@ -35,13 +35,17 @@ def compute_mse(y, tx, w):
     e = y - tx.dot(w)
     return 1/2*np.mean(e**2)
 
+def compute_mse_lr(y, tx, w):
+    """Calculate the mse for error vector e for logistic regression."""
+    y = np.reshape(y, (-1, 1)) 
+    e = y - tx.dot(w)
+    return 1/2*np.mean(e**2)
 
 def compute_gradient(y, tx, w): 
     """Compute the gradient."""
     e = y - tx.dot(w)
     G = -tx.T.dot(e) / len(e)
     return G
-
 
 def batch_iter(y, tx, batch_size=1, num_batches=1, shuffle=True):
     """
