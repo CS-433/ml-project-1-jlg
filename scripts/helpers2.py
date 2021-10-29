@@ -31,6 +31,7 @@ def standardize(x):
 
 def compute_mse(y, tx, w):
     """Calculate the mse for error vector e."""
+    y = np.reshape(y, (-1, 1)) #do we need another compute mse for lr?
     e = y - tx.dot(w)
     return 1/2*np.mean(e**2)
 
@@ -93,10 +94,10 @@ def calculate_loss(y, tx, w):
     print(np.shape(y.T))"""
     
     #y = np.reshape(y, (-1,1))
-    pred = sigmoid(tx.dot(w))
-    #pred = sigmoid(y.T.dot(tx).dot(w))
-    #loss = np.log(pred)
+    pred = sigmoid(np.dot(tx,w))
+    """Differente tentative pour loss"""
     #loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
+    #loss = -y*np.log(pred) - (1-y)*np.log(1-pred)
     loss = np.sum(np.log(1 + np.exp(tx.dot(w))) - y.dot(tx.dot(w)))
     #return np.squeeze(- loss)
     return loss
@@ -106,6 +107,8 @@ def calculate_gradient(y, tx, w):
     """compute the gradient of loss."""
     y = np.reshape(y, (-1, 1))
     grad = tx.T.dot(1/(1 + np.exp(-tx.dot(w))) - y)
+    """Differente tentative pour grad"""
+    #grad = np.dot(tx.T, sigmoid(np.dot(tx,w))-y)
     #grad = tx.T.dot(sigmoid(tx.dot(w))-y)
     #grad = -1*np.shape(y) + sigmoid(y.T.dot(tx).dot(w))
     return grad
@@ -122,9 +125,14 @@ def learning_by_gradient_descent(y, tx, w, gamma):
     Do one step of gradient descent using logistic regression.
     Return the loss and the updated w.
     """
-    loss = calculate_loss(y, tx, w)
     grad = calculate_gradient(y, tx, w)
+    #print('TEST1 : w size in learning')
+    #print(grad)
+    #print(gamma*grad)
+    #print(w)
     w = w - gamma*grad
+    #print(w)
+    loss = calculate_loss(y, tx, w)
     return loss, w
 
 def penalized_logistic_regression(y, tx, w, lambda_):

@@ -20,7 +20,8 @@ def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
     set fonction=0 for least squares with normal equations
         fonction=1 for ridge regression
         fonction=2 for gradient descent
-        fonction=3 for stochastic gradient decsent"""
+        fonction=3 for stochastic gradient decsent
+        fonction=4 for logistic regression"""
     
     # get k'th subgroup in test, others in train: 
     te_indice = k_indices[k]
