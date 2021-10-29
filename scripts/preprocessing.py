@@ -85,13 +85,13 @@ def log_distribution(tX, to_log):
                 tX_log[:, i] = np.log(1+tX[:, to_log[j]], where=np.all(tX[:, i]>0))  
     return tX_log
 
-def separate_sets(tX, y, ids):
-    index1 = np.where(tX[:, 22]==0)
-    index2 = np.where(tX[:, 22]==1)
-    index3 = np.where(tX[:, 22]>1)
+def separate_sets(tX, y, ids, col=22):
+    index1 = np.where(tX[:, col]==0)
+    index2 = np.where(tX[:, col]==1)
+    index3 = np.where(tX[:, col]>1)
     
     index = np.arange(0, tX.shape[1])
-    tX = tX[:, ~(index==22)] # delete the 22nd column of the original dataset
+    tX = tX[:, ~(index==col)] # delete the 22nd column of the original dataset
     
     set1_x = tX[index1]
     set1_x = set1_x[:, ~(np.all(set1_x==set1_x[0], axis = 0))] # delete possible columns with constant value
