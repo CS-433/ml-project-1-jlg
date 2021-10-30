@@ -12,7 +12,7 @@ def filtering_with_mean(tX):
     return tX_filtered
 
 
-def filtering_with_mean_bis(tX, y):
+def filtering_with_mean_bis(tX, y, lr=0):
     """Compute a mean of each column of the matrix tX according to ids which correpond to y=1 and another 
     mean of each column according to ids which correpond to y=-1 without taking the -999. Then, these means 
     replace the -999 according to the y of the row where the -999 is. It returns the filtered matrix"""
@@ -20,34 +20,8 @@ def filtering_with_mean_bis(tX, y):
     tX_filtered = np.copy(tX)
     
     ind_1 = np.where(y == 1)[0]
-    ind_2 = np.where(y == -1)[0]
-    tX_1 = tX[ind_1,:]
-    tX_2 = tX[ind_2,:]
-    
-    ind_3 = np.where(tX[:,0]==-999)[0]
-    new_ind_1 = np.intersect1d(ind_3, ind_1)
-    new_ind_2 = np.intersect1d(ind_3, ind_2)
-    
-    arr_1 = []
-    arr_2 = []
-    for ind in index :
-        arr_1 = np.delete(tX_1[:,ind], np.where(tX_1[:,ind]==-999))
-        mean_1 = np.mean(arr_1)
-        arr_2 = np.delete(tX_2[:,ind], np.where(tX_2[:,ind]==-999))
-        mean_2 = np.mean(arr_2)
-        tX_filtered[new_ind_1, ind] = mean_1
-        tX_filtered[new_ind_2, ind] = mean_2
-    return tX_filtered
-
-def filtering_with_mean_bis_lr(tX, y):
-    """Compute a mean of each column of the matrix tX according to ids which correpond to y=1 and another 
-    mean of each column according to ids which correpond to y=-1 without taking the -999. Then, these means 
-    replace the -999 according to the y of the row where the -999 is. It returns the filtered matrix"""
-    index = np.arange(tX.shape[1])
-    tX_filtered = np.copy(tX)
-    
-    ind_1 = np.where(y == 1)[0]
-    ind_2 = np.where(y == 0)[0]
+    if lr == 0: ind_2 = np.where(y == -1)[0]
+    if lr == 1: ind_2 = np.where(y == 0)[0]
     tX_1 = tX[ind_1,:]
     tX_2 = tX[ind_2,:]
     

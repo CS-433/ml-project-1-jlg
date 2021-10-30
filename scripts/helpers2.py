@@ -29,15 +29,14 @@ def standardize(x):
     x = x / std_x
     return x, mean_x, std_x
 
+def scaling(x):
+    xmin = np.min(x, axis=0)
+    xmax = np.min(x, axis=0)
+    x = (x - xmin)/(xmax - xmin)
+
 def compute_mse(y, tx, w):
     """Calculate the mse for error vector e."""
     y = np.reshape(y, (-1, 1)) #do we need another compute mse for lr?
-    e = y - tx.dot(w)
-    return 1/2*np.mean(e**2)
-
-def compute_mse_lr(y, tx, w):
-    """Calculate the mse for error vector e for logistic regression."""
-    y = np.reshape(y, (-1, 1)) 
     e = y - tx.dot(w)
     return 1/2*np.mean(e**2)
 
@@ -79,64 +78,49 @@ def build_poly(tx, degree):
         poly = np.c_[poly, np.power(tx, deg)]
     return poly
 
+
+##################### FOR LOGISTIC REGRESSION #############################################
+def compute_mse_lr(y, tx, w):
+    """Calculate the mse for error vector e for logistic regression."""
+    y = np.reshape(y, (-1, 1)) 
+    e = y - tx.dot(w)
+    return 1/2*np.mean(e**2)
+
 def sigmoid(t):
     """apply the sigmoid function on t."""
-    sig = (1 + np.exp(-t))**(-1)
-    return sig
+    print('t', t)
+    s = 1.0/(1 + np.exp(-t))
+    return s
 
 def calculate_loss(y, tx, w):
     """compute the loss: negative log likelihood."""
-    
-    """print('TEST1')
-    print(np.shape(y))
-    print(np.shape(y.T))
-    print(np.shape(tx))
-    print(np.shape(w))
-    y = np.reshape(y, (-1, 1))
-    print('TEST2')
-    print(np.shape(y))
-    print(np.shape(y.T))"""
-    
-    #y = np.reshape(y, (-1,1))
-    pred = sigmoid(np.dot(tx,w))
-    """Differente tentative pour loss"""
-    #loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
-    #loss = -y*np.log(pred) - (1-y)*np.log(1-pred)
-    loss = np.sum(np.log(1 + np.exp(tx.dot(w))) - y.dot(tx.dot(w)))
-    #return np.squeeze(- loss)
+    s = sigmoid(tx.dot(w))
+    loss = y.T.dot(np.log(s)) + (1 - y).T.dot(np.log(1 - s))
+    loss = np.squeeze(- loss)
     return loss
-
     
 def calculate_gradient(y, tx, w):
     """compute the gradient of loss."""
-    y = np.reshape(y, (-1, 1))
-    grad = tx.T.dot(1/(1 + np.exp(-tx.dot(w))) - y)
-    """Differente tentative pour grad"""
-    #grad = np.dot(tx.T, sigmoid(np.dot(tx,w))-y)
-    #grad = tx.T.dot(sigmoid(tx.dot(w))-y)
-    #grad = -1*np.shape(y) + sigmoid(y.T.dot(tx).dot(w))
+    y = np.reshape(y, (-1, 1)) 
+    s = sigmoid(tx.dot(w))
+    grad = tx.T.dot(s - y) / y.shape[0]
     return grad
 
 def calculate_hessian(y, tx, w):
     """return the Hessian of the loss function."""
-    pred = sigmoid(tx.dot(w))
-    pred = np.diag(pred.T[0])
-    r = np.multiply(pred, (1-pred))
-    return tx.T.dot(r).dot(tx)
+    s = sigmoid(tx.dot(w))
+    s = np.diag(s.T[0])
+    r = np.multiply(s, (1-s)) # derivative of sigmoid
+    H = tx.T.dot(r).dot(tx)
+    return H
 
 def learning_by_gradient_descent(y, tx, w, gamma):
-    """
-    Do one step of gradient descent using logistic regression.
+    """ Do one step of gradient descent using logistic regression.
     Return the loss and the updated w.
     """
-    grad = calculate_gradient(y, tx, w)
-    #print('TEST1 : w size in learning')
-    #print(grad)
-    #print(gamma*grad)
-    #print(w)
-    w = w - gamma*grad
-    #print(w)
     loss = calculate_loss(y, tx, w)
+    grad = calculate_gradient(y, tx, w)
+    w = w - gamma*grad
     return loss, w
 
 def penalized_logistic_regression(y, tx, w, lambda_):
