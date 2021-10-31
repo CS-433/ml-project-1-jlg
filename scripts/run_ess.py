@@ -41,49 +41,38 @@ set3_x_rr = best_filtering_rr(set3_x, set3_y)
 
 #### BEST MODEL APPLICATION : RIDGE REGRESSION #####
 
-degrees = np.arange(1,8)
 
 # Ridge regression of set 1
 print('\nSet 1 : Ridge regression')
-x_essai = set1_x_rr
-y = set1_y
 # Cross-validation on the degrees and the lambdas
-degree_opt, lambda_opt = best_degree_selection(y, x_essai, degrees, k_fold=4, lambdas=np.logspace(-4, 0, 30), fonction=1)
-print("Cross validation finished: optimal lambda {l} and degree {d}".format(l=lambda_opt, d=degree_opt))
+degree_rr_set1, lambda_rr_set1 = best_degree_selection(set1_y, set1_x_rr, degrees=np.arange(1,8), k_fold=4, lambdas=np.logspace(-4, 0, 30), fonction=1)
+print("Cross validation finished: optimal lambda {l} and degree {d}".format(l=lambda_rr_set1, d=degree_rr_set1))
 # Best degree and lambda model
-x_essai = build_poly(x_essai, degree_opt)
-w_rr_set1, loss_rr = ridge_regression(y, x_essai, lambda_opt)
-print("Ridge regression loss {loss}".format(loss=loss_rr))
-lambda_rr_set1 = lambda_opt
-degree_rr_set1 = degree_opt
+set1_x_rr = build_poly(set1_x_rr, degree_rr_set1)
+w_rr_set1, loss_rr_set1 = ridge_regression(set1_y, set1_x_rr, lambda_rr_set1)
+print("Ridge regression loss {loss}".format(loss=loss_rr_set1))
+
 
 # Ridge regression of set 2
 print('\nSet 2 : Ridge regression')
-x_essai = set2_x_rr
-y = set2_y
 # Cross-validation on the degrees and the lambdas
-degree_opt, lambda_opt = best_degree_selection(y, x_essai, degrees, k_fold=4, lambdas=np.logspace(-4, 0, 30), fonction=1)
-print("Cross validation finished: optimal lambda {l} and degree {d}".format(l=lambda_opt, d=degree_opt))
+degree_rr_set2, lambda_rr_set2 = best_degree_selection(set2_y, set2_x_rr, degrees=np.arange(1,8), k_fold=4, lambdas=np.logspace(-4, 0, 30), fonction=1)
+print("Cross validation finished: optimal lambda {l} and degree {d}".format(l=lambda_rr_set2, d=degree_rr_set2))
 # Best degree and lambda model
-x_essai = build_poly(x_essai, degree_opt)
-w_rr_set2, loss_rr = ridge_regression(y, x_essai, lambda_opt)
-print("Ridge regression loss {loss}".format(loss=loss_rr))
-lambda_rr_set2 = lambda_opt
-degree_rr_set2 = degree_opt
+set2_x_rr = build_poly(set2_x_rr, degree_rr_set2)
+w_rr_set2, loss_rr_set2 = ridge_regression(set2_y, set2_x_rr, lambda_rr_set2)
+print("Ridge regression loss {loss}".format(loss=loss_rr_set2))
+
 
 # Ridge regression of set 3
 print('\nSet 3 : Ridge regression')
-x_essai = set3_x_rr
-y = set3_y
 # Cross-validation on the degrees and the lambdas
-degree_opt, lambda_opt = best_degree_selection(y, x_essai, degrees, k_fold=4, lambdas=np.logspace(-4, 0, 30), fonction=1)
-print("Cross validation finished: optimal lambda {l} and degree {d}".format(l=lambda_opt, d=degree_opt))
+degree_rr_set3, lambda_rr_set3 = best_degree_selection(set3_y, set3_x_rr, degrees=np.arange(1,8), k_fold=4, lambdas=np.logspace(-4, 0, 30), fonction=1)
+print("Cross validation finished: optimal lambda {l} and degree {d}".format(l=lambda_rr_set3, d=degree_rr_set3))
 # Best degree and lambda model
-x_essai = build_poly(x_essai, degree_opt)
-w_rr_set3, loss_rr = ridge_regression(y, x_essai, lambda_opt)
-print("Ridge regression loss {loss}".format(loss=loss_rr))
-lambda_rr_set3 = lambda_opt
-degree_rr_set3 = degree_opt
+set3_x_rr = build_poly(set3_x_rr, degree_rr_set3)
+w_rr_set3, loss_rr_set3 = ridge_regression(set3_y, set3_x_rr, lambda_rr_set3)
+print("Ridge regression loss {loss}".format(loss=loss_rr_set3))
 
 
 #### CREATE SUBMISSION ####
