@@ -36,7 +36,6 @@ def scaling(x):
 
 def compute_mse(y, tx, w):
     """Calculate the mse for error vector e."""
-    y = np.reshape(y, (-1, 1)) #do we need another compute mse for lr?
     e = y - tx.dot(w)
     return 1/2*np.mean(e**2)
 
