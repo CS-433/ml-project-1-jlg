@@ -68,28 +68,27 @@ def logistic_regression(y, tx, initial_w=0, max_iters=10, gamma=0.01):
     return w, loss
 
 
-def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
+def reg_logistic_regression(y, tx, lambda_=0.1, initial_w=0, max_iters=10, gamma=0.01):
     """Logistic regression using gradient descent or SGD"""
-    
-    #threshold = 1e-8
+    threshold = 1e-8
     losses = []
-
-    # build tx
     tx = np.c_[np.ones((y.shape[0], 1)), tx]
+    if np.all(initial_w==0):
+        initial_w = np.zeros((tx.shape[1], 1))
     w = initial_w
 
     # start the logistic regression
-    for iter in range(max_iter):
+    for iter in range(max_iters): 
         # get loss and update w.
         loss, w = learning_by_penalized_gradient(y, tx, w, gamma, lambda_)
-        # log info
-        if iter % 100 == 0:
+        #w = update_weights_regularized(y, tx, initial_w, gamma, lambda_)
+        #loss = calculate_loss_regularized(y, tx, w, lambda_)
+        if iter % 2 == 0:
             print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
         # converge criterion
         losses.append(loss)
-        #if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
-            #break
-    #visualization(y, x, mean_x, std_x, w, "classification_by_logistic_regression_penalized_gradient_descent",True)
+        if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
+            break
     print("loss={l}".format(l=calculate_loss(y, tx, w)))
     
     return w, loss

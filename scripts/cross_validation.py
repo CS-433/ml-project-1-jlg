@@ -14,14 +14,15 @@ def build_k_indices(y, k_fold, seed=1):
     return np.array(k_indices)
 
 
-def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
+def k_fold_regression(y, x, k_indices, k, par, par2 = None, degree=0, fonction=1):
     """return the loss for k_fold cross validation.
     default regression is ridge 
     set fonction=0 for least squares with normal equations
         fonction=1 for ridge regression
         fonction=2 for gradient descent
         fonction=3 for stochastic gradient decsent
-        fonction=4 for logistic regression"""
+        fonction=4 for logistic regression
+        fonction=5 for regularized logistic regression"""
     
     # get k'th subgroup in test, others in train: 
     te_indice = k_indices[k]
@@ -52,10 +53,13 @@ def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
     elif fonction == 4:
         w, loss_tr = logistic_regression(y=y_tr, tx=tx_tr, gamma=par)
         tx_te = np.c_[np.ones((y_te.shape[0], 1)), tx_te]
-    
+    elif fonction == 5:
+        w, loss_tr = reg_logistic_regression(y=y_tr, tx=tx_tr, lambda_ = par2, gamma=par)
+        tx_te = np.c_[np.ones((y_te.shape[0], 1)), tx_te]
+        
     # calculate the loss for train and test data: 
     loss_tr = np.sqrt(2*loss_tr)
-    if fonction == 4:
+    if (fonction == 4 or fonction == 5):
         loss_te = np.sqrt(2*compute_mse_lr(y_te, tx_te, w))
     else: 
         loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
@@ -124,3 +128,42 @@ def best_degree_selection(y, x, degrees, k_fold, lambdas, fonction=1, seed=1):
     else: best_lambda =  lambdas[np.argmin(best_rmses)]
     
     return  best_degree, best_lambda
+
+
+def best_param_selection(y, x, k_fold, gammas, lambdas, fonction=5, seed=1):
+    """return the best degree and lambda association."""
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    
+    #for each degree, we compute the best lambdas and the associated rmse
+    best_lambdas = []
+    best_rmses = []
+    rmse_tr_g = []
+    rmse_te_g = []
+    
+    #vary degree
+    for gamma in gammas:
+        rmse_te_l = []
+        loss_tr = 0
+        loss_te = 0
+        
+        for lambda_ in lambdas:
+            rmse_te_tmp = []
+            for k in range(k_fold):
+                loss_tr_k, loss_te_k = k_fold_regression(y, x, k_indices, k, gamma, lambda_, fonction=5)
+                loss_tr += loss_tr_k
+                loss_te += loss_te_k
+                rmse_te_tmp.append(loss_te_k)
+            rmse_te_l.append(np.mean(rmse_te_tmp))
+            rmse_tr_g.append(loss_tr/k_fold)
+            rmse_te_g.append(loss_te/k_fold)
+
+        ind_lambda_opt = np.argmin(rmse_te_l)
+        best_lambdas.append(lambdas[ind_lambda_opt])
+        best_rmses.append(rmse_te_l[ind_lambda_opt])
+    
+    best_gamma = gammas[np.argmin(rmse_te_g)]
+    #print("best rmses", best_rmses) 
+    best_lambda =  lambdas[np.argmin(best_rmses)]
+    
+    return  best_gamma, best_lambda

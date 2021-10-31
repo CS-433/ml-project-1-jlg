@@ -88,7 +88,7 @@ def compute_mse_lr(y, tx, w):
 
 def sigmoid(t):
     """apply the sigmoid function on t."""
-    print('t', t)
+    #print('t', t)
     s = 1.0/(1 + np.exp(-t))
     return s
 
@@ -103,7 +103,7 @@ def calculate_gradient(y, tx, w):
     """compute the gradient of loss."""
     y = np.reshape(y, (-1, 1)) 
     s = sigmoid(tx.dot(w))
-    grad = tx.T.dot(s - y) / y.shape[0]
+    grad = tx.T.dot(s - y)  #PUT IT HERE OR IN LEARNING ???
     return grad
 
 def calculate_hessian(y, tx, w):
@@ -120,7 +120,7 @@ def learning_by_gradient_descent(y, tx, w, gamma):
     """
     loss = calculate_loss(y, tx, w)
     grad = calculate_gradient(y, tx, w)
-    w = w - gamma*grad
+    w = w - gamma*grad / y.shape[0]
     return loss, w
 
 def penalized_logistic_regression(y, tx, w, lambda_):
@@ -128,14 +128,14 @@ def penalized_logistic_regression(y, tx, w, lambda_):
     num_samples = y.shape[0]
     loss = calculate_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
     grad = calculate_gradient(y, tx, w) + 2 * lambda_ * w
-    hess = calculate_hessian(y, tx, w) + 2 * lambda_
-    return loss, grad, hess
+    #hess = calculate_hessian(y, tx, w) + 2 * lambda_
+    return loss, grad
 
 def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
     """
     Do one step of gradient descent, using the penalized logistic regression.
     Return the loss and updated w.
     """
-    loss, grad, hess = penalized_logistic_regression(y, tx, w, lambda_)
-    w = w - gamma * grad
+    loss, grad = penalized_logistic_regression(y, tx, w, lambda_)
+    w = w - gamma * grad / y.shape[0]
     return loss, w
