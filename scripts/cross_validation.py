@@ -131,22 +131,21 @@ def best_degree_selection(y, x, degrees, k_fold, lambdas, fonction=1, seed=1):
 
 
 def best_param_selection(y, x, k_fold, gammas, lambdas, fonction=5, seed=1):
-    """return the best degree and lambda association."""
+    """return the best gamma and lambda association."""
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
     
-    #for each degree, we compute the best lambdas and the associated rmse
     best_lambdas = []
     best_rmses = []
     rmse_tr_g = []
     rmse_te_g = []
     
-    #vary degree
+    #vary gamma
     for gamma in gammas:
         rmse_te_l = []
         loss_tr = 0
         loss_te = 0
-        
+        #vary lambda
         for lambda_ in lambdas:
             rmse_te_tmp = []
             for k in range(k_fold):
@@ -162,8 +161,7 @@ def best_param_selection(y, x, k_fold, gammas, lambdas, fonction=5, seed=1):
         best_lambdas.append(lambdas[ind_lambda_opt])
         best_rmses.append(rmse_te_l[ind_lambda_opt])
     
-    best_gamma = gammas[np.argmin(rmse_te_g)]
-    #print("best rmses", best_rmses) 
-    best_lambda =  lambdas[np.argmin(best_rmses)]
+    best_gamma = gammas[np.argmin(rmse_te_g)] 
+    best_lambda = lambdas[np.argmin(best_rmses)]
     
     return  best_gamma, best_lambda

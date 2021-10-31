@@ -68,7 +68,7 @@ def logistic_regression(y, tx, initial_w=0, max_iters=10, gamma=0.01):
     return w, loss
 
 
-def reg_logistic_regression(y, tx, lambda_=0.1, initial_w=0, max_iters=10, gamma=0.01):
+def reg_logistic_regression(y, tx, lambda_=0.1, initial_w=0, max_iters=5, gamma=0.01):
     """Logistic regression using gradient descent or SGD"""
     threshold = 1e-8
     losses = []
@@ -81,8 +81,6 @@ def reg_logistic_regression(y, tx, lambda_=0.1, initial_w=0, max_iters=10, gamma
     for iter in range(max_iters): 
         # get loss and update w.
         loss, w = learning_by_penalized_gradient(y, tx, w, gamma, lambda_)
-        #w = update_weights_regularized(y, tx, initial_w, gamma, lambda_)
-        #loss = calculate_loss_regularized(y, tx, w, lambda_)
         if iter % 2 == 0:
             print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
         # converge criterion
