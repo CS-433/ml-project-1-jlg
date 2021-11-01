@@ -8,6 +8,6 @@ Our repository is composed :
 - The report : It is a pdf file that summarize our results and our decision process.
 - The readme
 
-Our results can be reproduced by using Python 3.8
+Our results can be reproduced by using Python 3.8 and by running in the terminal in the folder where run.py is (scripts folder) the command : python run.py
 
 
