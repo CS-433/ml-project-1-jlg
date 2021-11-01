@@ -121,7 +121,6 @@ def penalized_logistic_regression(y, tx, w, lambda_):
     num_samples = y.shape[0]
     loss = calculate_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
     grad = calculate_gradient(y, tx, w) + 2 * lambda_ * w
-    #hess = calculate_hessian(y, tx, w) + 2 * lambda_
     return loss, grad
 
 def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):

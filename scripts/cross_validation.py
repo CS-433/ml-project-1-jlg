@@ -164,8 +164,7 @@ def best_param_selection(y, x, k_fold, gammas, lambdas, fonction=5, seed=1):
 
 
 def k_fold_regression_rlr(y, x, k_indices, k, par, par2 = None, degree=0, fonction=5):
-    """return the loss for k_fold cross validation.
-    for regularized logistic regression"""
+    """return the loss for k_fold cross validation for regularized logistic regression"""
     
     # get k'th subgroup in test, others in train: 
     te_indice = k_indices[k]

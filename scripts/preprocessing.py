@@ -84,8 +84,8 @@ def log_distribution(tX, to_log):
     return tX_log
 
 def separate_sets(tX, y, ids, col=22):
-    """Separate the dataset in 3 sets according to the PRI_jet_num feature (22). Features with constant values and column 22 are deleted. So, 
-    this function get also rid of the features whose ratio of -999 is 1 in the sets"""
+    """Separate the dataset in 3 sets according to the PRI_jet_num feature (22). Features with constant values and column 22 are deleted. 
+    So, this function get also rid of the features whose ratio of -999 is 1 in the sets"""
     index1 = np.where(tX[:, col]==0)
     index2 = np.where(tX[:, col]==1)
     index3 = np.where(tX[:, col]>1)
