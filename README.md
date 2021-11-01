@@ -7,5 +7,5 @@ Our repository is composed :
 - Data folder : It contains the training data that we used to find relevant models, the test data that we used to do our AIcrowd submissions after selecting the best predicted models on the training data. It will also contain the best submission after running run.py script. Be aware that you have to unzip the training and the test data before using it.
 
 Our results can be reproduced by using Python 3.8 and by running in the terminal in the folder where run.py is (scripts folder) the command : python run.py
-
+The outputs in the project1.ipynb file have been obtained on linux. 
 
