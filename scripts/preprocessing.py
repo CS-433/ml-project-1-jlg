@@ -90,19 +90,19 @@ def separate_sets(tX, y, ids, col=22):
     index3 = np.where(tX[:, col]>1)
     
     index = np.arange(0, tX.shape[1])
-    tX = tX[:, ~(index==col)] # delete the 22nd column of the original dataset
+    tX_fil = tX[:, ~(index==col)] # delete the 22nd column of the original dataset
     
-    set1_x = tX[index1]
+    set1_x = tX_fil[index1]
     set1_x = set1_x[:, ~(np.all(set1_x==set1_x[0], axis = 0))] # delete possible columns with constant value
     set1_y = y[index1]
     set1_ids = ids[index1]
     
-    set2_x = tX[index2]
+    set2_x = tX_fil[index2]
     set2_x = set2_x[:, ~(np.all(set2_x==set2_x[0], axis = 0))] # delete possible columns with constant value
     set2_y = y[index2]
     set2_ids = ids[index2]
     
-    set3_x = tX[index3]
+    set3_x = tX_fil[index3]
     set3_x = set3_x[:, ~(np.all(set3_x==set3_x[0], axis = 0))] # delete possible columns with constant value
     set3_y = y[index3]
     set3_ids = ids[index3]
