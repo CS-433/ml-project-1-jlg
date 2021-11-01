@@ -25,7 +25,6 @@ set1_x, set1_y, set1_ids, set2_x, set2_y, set2_ids, set3_x, set3_y, set3_ids = s
 
 # The filtering method that gives the best results for Ridge regression
 def best_filtering_rr(set_x, set_y) :
-        set_x = outliers(set_x, -999)
         set_x = filtering_with_mean_bis(set_x, set_y)
         return set_x
     
@@ -85,7 +84,6 @@ y_test , tX_test, ids_test = load_csv_data(DATA_TEST_PATH)
 set1_x, _, set1_ids, set2_x, _, set2_ids, set3_x, _, set3_ids = separate_sets(tX_test, y_test, ids_test)
 
 def filtering_test_rr (set_x, degree_rr):
-    set_x = outliers(set_x, -999)
     set_x = build_poly(set_x, degree_rr)
     return set_x
 

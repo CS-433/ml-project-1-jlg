@@ -13,6 +13,7 @@ def build_k_indices(y, k_fold, seed=1):
                  for k in range(k_fold)]
     return np.array(k_indices)
 
+
 def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
     """return the loss for k_fold cross validation.
     default regression is ridge 
@@ -58,7 +59,6 @@ def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
         loss_te = np.sqrt(2*compute_mse_lr(y_te, tx_te, w))
     else: 
         loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
-    
     
     return loss_tr, loss_te
 
@@ -161,6 +161,7 @@ def best_param_selection(y, x, k_fold, gammas, lambdas, fonction=5, seed=1):
     best_lambda = lambdas[np.argmin(best_rmses)]
     
     return  best_gamma, best_lambda
+
 
 def k_fold_regression_rlr(y, x, k_indices, k, par, par2 = None, degree=0, fonction=5):
     """return the loss for k_fold cross validation.

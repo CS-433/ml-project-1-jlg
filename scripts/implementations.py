@@ -4,6 +4,7 @@
 import numpy as np
 from helpers2 import *
 
+
 def least_squares(y, tx):
     """Least squares regression using normal equations"""
     w = np.linalg.solve(tx.T.dot(tx), tx.T.dot(y))
@@ -18,6 +19,7 @@ def ridge_regression(y, tx, lambda_):
     w = np.linalg.solve(tx.T.dot(tx) + I.dot(lambda_2), tx.T.dot(y))
     loss = compute_mse(y, tx, w)
     return w, loss
+
 
 def least_squares_GD(y, tx, gamma, max_iters=50):
     """Linear regression using gradient descent"""

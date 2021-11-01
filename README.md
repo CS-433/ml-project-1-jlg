@@ -4,7 +4,7 @@ The goal of this project is to use regression tasks to predict if the decay sign
 
 Our repository is composed :
 - Scripts folder : It contains the code which is organized in one jupyter notebook which contains the best results for each regression function and different scripts of functions. implementations.py contains the regression functions, preprocessing.py contains all functions to preprocess the original matrix, cross_validation.py has different cross-validated and best parameter selection methods, proj1_helpers.py and helpers2.py contain different helper functions, run.py contain the code for the submission of our best result.
-- Data folder : It contains the training data that we used to find relevant models, the test data that we used to do our AIcrowd submissions after selecting the best predicted models on the training data. It will also contain our best submission after running run.py script. Be aware that you have to unzip the training and the test data before using it.
+- Data folder : It contains the training data that we used to find relevant models, the test data that we used to do our AIcrowd submissions after selecting the best predicted models on the training data. It will also contain the best submission after running run.py script. Be aware that you have to unzip the training and the test data before using it.
 
 Our results can be reproduced by using Python 3.8 and by running in the terminal in the folder where run.py is (scripts folder) the command : python run.py
 

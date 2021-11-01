@@ -18,7 +18,6 @@ def split_data(x, y, ids, ratio, seed=1):
     x_test     = x[indices[index_split:]]
     y_test     = y[indices[index_split:]] 
     ids_test = ids[indices[index_split:]] 
-    
     return x_train, y_train, x_test, y_test, ids_train, ids_test
 
 def standardize(x):

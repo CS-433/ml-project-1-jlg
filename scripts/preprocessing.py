@@ -84,7 +84,8 @@ def log_distribution(tX, to_log):
     return tX_log
 
 def separate_sets(tX, y, ids, col=22):
-    """Separate the dataset in 3 sets according to the jet number. Features with constant values and column 22 are deleted."""
+    """Separate the dataset in 3 sets according to the PRI_jet_num feature (22). Features with constant values and column 22 are deleted. So, 
+    this function get also rid of the features whose ratio of -999 is 1 in the sets"""
     index1 = np.where(tX[:, col]==0)
     index2 = np.where(tX[:, col]==1)
     index3 = np.where(tX[:, col]>1)
@@ -115,18 +116,3 @@ def concatenate_sets(set1_y, set1_ids, set2_y, set2_ids, set3_y, set3_ids):
     ids = np.concatenate((set1_ids, set2_ids, set3_ids), axis = 0)
     return y, ids
 
-def outliers(tX, outlier):
-    """Check for the ratio of outliers in a column of a matrix. If the ratio is 1, the column is deleted."""
-    outliers = []
-    M = np.squeeze(tX.shape[0])
-    for col in range(tX.shape[1]) :
-        out_col = np.nonzero(tX[:,col] == outlier)[0].shape
-        out_col = np.squeeze(out_col)
-        outliers.append(out_col/M)
-    print('outliers ratio for each feature', outliers)
-    
-    index_full = np.arange(tX.shape[1])
-    index = index_full[~(outliers==np.ones(len(outliers)))]
-    index = index.reshape(-1)
-    X_without_outliers = tX[:, index]
-    return X_without_outliers 
