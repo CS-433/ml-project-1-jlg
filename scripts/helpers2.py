@@ -29,11 +29,6 @@ def standardize(x):
     x = x / std_x
     return x, mean_x, std_x
 
-def scaling(x):
-    xmin = np.min(x, axis=0)
-    xmax = np.min(x, axis=0)
-    x = (x - xmin)/(xmax - xmin)
-
 def compute_mse(y, tx, w):
     """Calculate the mse for error vector e."""
     e = y - tx.dot(w)
@@ -102,7 +97,7 @@ def calculate_gradient(y, tx, w):
     """compute the gradient of loss."""
     y = np.reshape(y, (-1, 1)) 
     s = sigmoid(tx.dot(w))
-    grad = tx.T.dot(s - y)  #PUT IT HERE OR IN LEARNING ???
+    grad = tx.T.dot(s - y)  
     return grad
 
 def calculate_hessian(y, tx, w):

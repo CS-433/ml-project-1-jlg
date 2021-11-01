@@ -1,7 +1,7 @@
 import numpy as np
 
 def filtering_with_mean(tX):
-    """Replace the -999 of each column of the matrix tX by the mean of the column without the -999"""
+    """Replace the -999 of each column of the matrix tX by the mean of the column without the -999."""
     index = np.arange(tX.shape[1])
     tX_filtered = np.copy(tX)
     arr = []
@@ -15,7 +15,7 @@ def filtering_with_mean(tX):
 def filtering_with_mean_bis(tX, y, lr=0):
     """Compute a mean of each column of the matrix tX according to ids which correpond to y=1 and another 
     mean of each column according to ids which correpond to y=-1 without taking the -999. Then, these means 
-    replace the -999 according to the y of the row where the -999 is. It returns the filtered matrix"""
+    replace the -999 according to the y of the row where the -999 is. It returns the filtered matrix."""
     index = np.arange(tX.shape[1])
     tX_filtered = np.copy(tX)
     
@@ -41,14 +41,14 @@ def filtering_with_mean_bis(tX, y, lr=0):
     return tX_filtered
 
 def std(tX):
-    """Standardize each column of the matrix tX if the standard deviation is bigger than 0"""
+    """Standardize each column of the matrix tX if the standard deviation is bigger than 0."""
     mean = np.mean(tX, axis = 0)
     std = np.std(tX, axis = 0)
     tX[:, std>0] = (tX[:, std>0] - mean[std>0])/std[std>0]
     return tX
 
 def cut(tX, to_cut):
-    """Remove columns of the matrix tX whose index are given in the array to_cut as parameters"""
+    """Remove columns of the matrix tX whose index are given in the array to_cut as parameters."""
     cut_index = 100*np.ones(tX.shape[1])
     index_full = np.arange(tX.shape[1])
     for i in range(tX.shape[1]):
@@ -61,7 +61,7 @@ def cut(tX, to_cut):
     return tX_cut
 
 def keep(tX, to_keep):
-    """Keep only the columns of the matrix tX whose index are given in the array to_keep as parameters"""
+    """Keep only the columns of the matrix tX whose index are given in the array to_keep as parameters."""
     keep_index = 100*np.ones(tX.shape[1])
     index_full = np.arange(tX.shape[1])
     for i in range(tX.shape[1]):
@@ -74,6 +74,7 @@ def keep(tX, to_keep):
     return tX_kept
 
 def log_distribution(tX, to_log):
+    """ returns the matrix tX with a log transformation applied to the columns passed in to_log."""
     tX_log = np.copy(tX)
     index = np.arange(tX.shape[1])
     for i in range(tX.shape[1]):
@@ -83,6 +84,7 @@ def log_distribution(tX, to_log):
     return tX_log
 
 def separate_sets(tX, y, ids, col=22):
+    """Separate the dataset in 3 sets according to the jet number. Features with constant values and column 22 are deleted."""
     index1 = np.where(tX[:, col]==0)
     index2 = np.where(tX[:, col]==1)
     index3 = np.where(tX[:, col]>1)
@@ -108,11 +110,13 @@ def separate_sets(tX, y, ids, col=22):
     return set1_x, set1_y, set1_ids, set2_x, set2_y, set2_ids, set3_x, set3_y, set3_ids
 
 def concatenate_sets(set1_y, set1_ids, set2_y, set2_ids, set3_y, set3_ids):
+    """Get back a vector with all the data from each set."""
     y = np.concatenate((set1_y, set2_y, set3_y), axis = 0)
     ids = np.concatenate((set1_ids, set2_ids, set3_ids), axis = 0)
     return y, ids
 
 def outliers(tX, outlier):
+    """Check for the ratio of outliers in a column of a matrix. If the ratio is 1, the column is deleted."""
     outliers = []
     M = np.squeeze(tX.shape[0])
     for col in range(tX.shape[1]) :
