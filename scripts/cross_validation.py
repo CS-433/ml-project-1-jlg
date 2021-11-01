@@ -13,16 +13,14 @@ def build_k_indices(y, k_fold, seed=1):
                  for k in range(k_fold)]
     return np.array(k_indices)
 
-
-def k_fold_regression(y, x, k_indices, k, par, par2 = None, degree=0, fonction=1):
+def k_fold_regression(y, x, k_indices, k, par, degree=0, fonction=1):
     """return the loss for k_fold cross validation.
     default regression is ridge 
     set fonction=0 for least squares with normal equations
         fonction=1 for ridge regression
         fonction=2 for gradient descent
         fonction=3 for stochastic gradient decsent
-        fonction=4 for logistic regression
-        fonction=5 for regularized logistic regression"""
+        fonction=4 for logistic regression"""
     
     # get k'th subgroup in test, others in train: 
     te_indice = k_indices[k]
@@ -53,16 +51,14 @@ def k_fold_regression(y, x, k_indices, k, par, par2 = None, degree=0, fonction=1
     elif fonction == 4:
         w, loss_tr = logistic_regression(y=y_tr, tx=tx_tr, gamma=par)
         tx_te = np.c_[np.ones((y_te.shape[0], 1)), tx_te]
-    elif fonction == 5:
-        w, loss_tr = reg_logistic_regression(y=y_tr, tx=tx_tr, lambda_ = par2, gamma=par)
-        tx_te = np.c_[np.ones((y_te.shape[0], 1)), tx_te]
         
     # calculate the loss for train and test data: 
     loss_tr = np.sqrt(2*loss_tr)
-    if (fonction == 4 or fonction == 5):
+    if (fonction == 4):
         loss_te = np.sqrt(2*compute_mse_lr(y_te, tx_te, w))
     else: 
         loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
+    
     
     return loss_tr, loss_te
 
@@ -149,7 +145,7 @@ def best_param_selection(y, x, k_fold, gammas, lambdas, fonction=5, seed=1):
         for lambda_ in lambdas:
             rmse_te_tmp = []
             for k in range(k_fold):
-                loss_tr_k, loss_te_k = k_fold_regression(y, x, k_indices, k, gamma, lambda_, fonction=5)
+                loss_tr_k, loss_te_k = k_fold_regression_rlr(y, x, k_indices, k, gamma, lambda_, fonction=5)
                 loss_tr += loss_tr_k
                 loss_te += loss_te_k
                 rmse_te_tmp.append(loss_te_k)
@@ -165,3 +161,35 @@ def best_param_selection(y, x, k_fold, gammas, lambdas, fonction=5, seed=1):
     best_lambda = lambdas[np.argmin(best_rmses)]
     
     return  best_gamma, best_lambda
+
+def k_fold_regression_rlr(y, x, k_indices, k, par, par2 = None, degree=0, fonction=5):
+    """return the loss for k_fold cross validation.
+    for regularized logistic regression"""
+    
+    # get k'th subgroup in test, others in train: 
+    te_indice = k_indices[k]
+    tr_indice = k_indices[~(np.arange(k_indices.shape[0]) == k)]
+    tr_indice = tr_indice.reshape(-1)
+    y_te = y[te_indice]
+    y_tr = y[tr_indice]
+    x_te = x[te_indice]
+    x_tr = x[tr_indice]
+
+    # form data with polynomial degree
+    if degree==0:
+        tx_tr = x_tr
+        tx_te = x_te
+    else: 
+        tx_tr = build_poly(x_tr, degree)
+        tx_te = build_poly(x_te, degree)
+    
+    # Regression
+    if fonction == 5:
+        w, loss_tr = reg_logistic_regression(y=y_tr, tx=tx_tr, lambda_ = par2, gamma=par)
+        tx_te = np.c_[np.ones((y_te.shape[0], 1)), tx_te]
+        
+    # calculate the loss for train and test data: 
+    loss_tr = np.sqrt(2*loss_tr)
+    loss_te = np.sqrt(2*compute_mse_lr(y_te, tx_te, w))
+    
+    return loss_tr, loss_te
