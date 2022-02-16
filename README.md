@@ -1,4 +1,4 @@
-# ml-project-1-jlg_project1_ml
+# ml-project-1-jlg
 
 The goal of this project is to use regression tasks to predict if the decay signature of a collision event is a Higgs boson (signal) or something else (background) based on some features representing the decay signature. Only numpy and matplotlib libraries are allowed.
 
